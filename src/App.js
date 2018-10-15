@@ -1,26 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 
 class App extends Component {
+  constructor () {
+    super();
+    this.state = { todoItem: [] }
+  }
+
+  componentDidMount() {
+    axios.get("https://localhost:44333/api/todo")
+      .then((res) => {
+          this.setState({
+              todoItem: res.data
+          });
+      }).catch((error) => {
+        alert("There is an error in API call.");
+      });
+  }
+
+
+
+
+
   render() {
+    console.log(this.state.todoItem)
+    const todolist = this.state.todoItem.map(todo => {
+      return (<tr key={todo.id}>
+        <td>{todo.id}</td>
+        <td>{todo.name}</td>
+        <td>{todo.isComplete ? "Yes" : "No"}</td>
+      </tr>)
+    })
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      
+        this.state.todoItem != null && 
+        <div>
+            <table>
+              <thead>
+                <td>ID</td>
+                <td>NAME</td>
+                <td>IsCOMPLETE</td>
+              </thead>
+              <tbody>
+                {todolist}
+              </tbody>
+            </table>
+        </div>        
+      
     );
   }
 }
